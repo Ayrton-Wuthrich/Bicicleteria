@@ -1,62 +1,3 @@
-// import { useEffect, useState } from "react";
-// import { LEVELS, DAYS } from "../../models/levels.enum";
-// import { Task } from "../../models/task.class";
-// import TaskComponent from "../pure/task";
-
-// const TaskListComponent = () => {
-//     const defaultTask = new Task(
-//         [
-//             "Ayrton",
-//             "Bici vairo 26 roja",
-//             "Revisar ambas ruedas",
-//             false,
-//             LEVELS.normal,
-//             DAYS.lunes,
-//             "12:30",
-//         ],
-//         [
-//             "Tato",
-//             "Bici vairo 26 negra",
-//             "Revisar cambios y frenos",
-//             false,
-//             LEVELS.conApuro,
-//             DAYS.martes,
-//             "10:45",
-//         ]
-//     );
-
-//     //Estado del componente
-//     const [tasks, setTasks] = useState([defaultTask]);
-//     const [loading, setLoading] = useState(true);
-
-//     //Control del ciclo de vida del componente
-//     useEffect(() => {
-//         console.log("Modificacion de tarea");
-//         setLoading(false);
-//         return () => {
-//             console.log("Desaparecio la tarea");
-//         };
-//     }, [tasks]);
-
-//     return (
-//         <div>
-//             <div
-//                 style={{
-//                     background: "skyblue",
-//                     padding: "1rem 2rem",
-//                     borderRadius: "1rem",
-//                 }}
-//             >
-//                 <h3>Trabajos:</h3>
-//                 <TaskComponent task={defaultTask}></TaskComponent>
-//             </div>
-//             {/* APlicar un For/Map para renderizar una lista de trabajos */}
-//         </div>
-//     );
-// };
-
-// export default TaskListComponent;
-
 import { useEffect, useState } from "react";
 import { LEVELS, DAYS } from "../../models/levels.enum";
 import { Task } from "../../models/task.class";
@@ -134,6 +75,21 @@ const TaskListComponent = () => {
         };
     }, [tasks]);
 
+    function completeTask(task) {
+        console.log("la tarea a sido completada ", task);
+        const index = tasks.indexOf(task);
+        const tempTasks = [...tasks];
+        tempTasks[index].completed = !tempTasks[index].completed;
+        setTasks(tempTasks);
+    }
+
+    function addTask(task) {
+        console.log("Trabajo agregado", task);
+        const tempTasks = [...tasks];
+        tempTasks.push(task);
+        setTasks(tempTasks);
+    }
+
     return (
         <div
             style={{
@@ -142,6 +98,7 @@ const TaskListComponent = () => {
                 borderRadius: "2rem",
                 color: "white",
                 fontSize: "2rem",
+                marginRight: "1rem",
             }}
         >
             <h3>TRABAJO:</h3>
@@ -153,10 +110,14 @@ const TaskListComponent = () => {
                 }}
             >
                 {tasks.map((task, index) => (
-                    <TaskComponent key={index} task={task} />
+                    <TaskComponent
+                        key={index}
+                        task={task}
+                        complete={completeTask}
+                    />
                 ))}
             </div>
-            <TaskForm />
+            <TaskForm add={addTask} />
         </div>
     );
 };
